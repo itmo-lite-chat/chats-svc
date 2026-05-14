@@ -222,6 +222,20 @@ func (s *Storage) TouchChatLastMessage(ctx context.Context, chatID string, messa
 	return scanChat(row)
 }
 
+func (s *Storage) DeleteChat(ctx context.Context, chatID string) error {
+	tag, err := s.pool.Exec(ctx, `
+		delete from chats
+		where chat_id = $1
+	`, chatID)
+	if err != nil {
+		return err
+	}
+	if tag.RowsAffected() == 0 {
+		return pgx.ErrNoRows
+	}
+	return nil
+}
+
 func (s *Storage) migrate(ctx context.Context) error {
 	_, err := s.pool.Exec(ctx, `
 		create table if not exists chats (

@@ -80,6 +80,13 @@ func (a *API) TouchChatLastMessage(ctx context.Context, req *pb.TouchChatLastMes
 	return &pb.TouchChatLastMessageResponse{Chat: toProtoChat(chat)}, nil
 }
 
+func (a *API) DeleteChat(ctx context.Context, req *pb.DeleteChatRequest) (*pb.DeleteChatResponse, error) {
+	if err := a.service.DeleteChat(ctx, req.GetChatId()); err != nil {
+		return nil, status.Error(codes.NotFound, "chat not found")
+	}
+	return &pb.DeleteChatResponse{}, nil
+}
+
 func toProtoChat(chat domain.Chat) *pb.Chat {
 	pbChat := &pb.Chat{
 		ChatId:             chat.ID,

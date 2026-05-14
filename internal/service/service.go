@@ -14,6 +14,7 @@ type Storage interface {
 	CheckChatMember(ctx context.Context, chatID, userID string) (domain.Member, bool, error)
 	UpdateLastReadMessage(ctx context.Context, chatID, userID string, messageID int64) error
 	TouchChatLastMessage(ctx context.Context, chatID string, messageID int64, preview string) (domain.Chat, error)
+	DeleteChat(ctx context.Context, chatID string) error
 }
 
 type Service struct {
@@ -50,4 +51,8 @@ func (s *Service) UpdateLastReadMessage(ctx context.Context, chatID, userID stri
 
 func (s *Service) TouchChatLastMessage(ctx context.Context, chatID string, messageID int64, preview string) (domain.Chat, error) {
 	return s.storage.TouchChatLastMessage(ctx, chatID, messageID, preview)
+}
+
+func (s *Service) DeleteChat(ctx context.Context, chatID string) error {
+	return s.storage.DeleteChat(ctx, chatID)
 }
